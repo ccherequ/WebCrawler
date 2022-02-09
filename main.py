@@ -4,6 +4,7 @@ import nltk
 from nltk.stem import PorterStemmer
 bp = 'ANALYST/'
 import os
+
 def stem(token):
     stemmer = PorterStemmer()
     return stemmer.stem(token)
