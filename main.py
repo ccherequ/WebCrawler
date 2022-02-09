@@ -5,4 +5,4 @@ from nltk.stem import PorterStemmer
 
 def stem(token):
     stemmer = PorterStemmer()
-    return stemmer(token)
+    return stemmer.stem(token)
