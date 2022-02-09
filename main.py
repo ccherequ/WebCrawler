@@ -4,6 +4,8 @@ import nltk
 from nltk.stem import PorterStemmer
 bp = 'TEST/'
 import os
+from bs4 import BeautifulSoup
+
 
 def stem(token):
     stemmer = PorterStemmer()
@@ -32,4 +34,25 @@ def read_in(str_path):
     return list_of_files
 
 
-print(read_in(bp))
+for entry in os.listdir(bp):
+    x = os.path.join(bp, entry)
+    for entry2 in os.listdir(x):
+        final = os.path.join(x, entry2)  # file
+        json_dict = make_json_dict(final)
+        url = json_dict['url']
+        content = json_dict['content']
+        encoding = json_dict['encoding']
+        soup = BeautifulSoup(content, 'html.parser')
+        
+
+
+
+
+
+
+
+
+
+
+
+
