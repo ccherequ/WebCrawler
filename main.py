@@ -13,3 +13,7 @@ def read_json():
               , "r") as json_file:
         json_load = json.load(json_file)
     print(json_load)
+
+def make_json_dict(file):
+    with open(file,'r') as f:
+        return json.load(f)
