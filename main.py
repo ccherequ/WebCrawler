@@ -1,5 +1,5 @@
 import json
-data_struct = {{}}
+#data_struct = {{}}
 from nltk.stem import PorterStemmer
 
 
