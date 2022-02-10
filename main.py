@@ -57,8 +57,13 @@ for entry in os.listdir(bp):
             inverted_index.addUrlToToken(k,counter,v)
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 print("NUMBER OF INDEXED DOCUMENTS: "+ str(len(unique_links_set)))
 print("NUMBER OF UNIQUE WORDS: "+str(len(inverted_index.data.keys())))
+=======
+print("NUMBER OF INDEXED DOCUMENTS: " + str(len(unique_links_set)))
+print("NUMBER OF UNIQUE WORDS: " + str(len(inverted_index.data.keys())))
+>>>>>>> 8bc644fa2e572095470ad1849c598aaab35a8dd1
 =======
 print("NUMBER OF INDEXED DOCUMENTS: " + str(len(unique_links_set)))
 print("NUMBER OF UNIQUE WORDS: " + str(len(inverted_index.data.keys())))
