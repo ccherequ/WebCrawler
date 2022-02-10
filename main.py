@@ -33,6 +33,11 @@ def read_in(str_path):
             list_of_files.append(final)
     return list_of_files
 
+def tokenize(content):
+    Tokenizer = RegexpTokenizer('[a-zA-Z\']{2,}') 
+    tokens = Tokenizer.tokenize(content)
+    return tokens
+
 
 for entry in os.listdir(bp):
     x = os.path.join(bp, entry)
