@@ -5,6 +5,8 @@ from nltk.stem import PorterStemmer
 bp = 'TEST/'
 import os
 from bs4 import BeautifulSoup
+from nltk.tokenize import RegexpTokenizer
+from collections import Counter
 
 
 def stem(token):
@@ -49,8 +51,10 @@ for entry in os.listdir(bp):
         encoding = json_dict['encoding']
         soup = BeautifulSoup(content, 'html.parser')
         text = soup.get_text()
-        print(url)
-        print(text)
+        tokens = tokenize(text)
+        tokens_freq = Counter(tokens)
+        
+
         
 
 
