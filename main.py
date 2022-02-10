@@ -56,8 +56,10 @@ for entry in os.listdir(bp):
         for k,v in tokens_freq.items():
             inverted_index.addUrlToToken(k,counter,v)
 
-print("NUMBER OF INDEXED DOCUMENTS: " + str(len(unique_links_set)))
-print("NUMBER OF UNIQUE WORDS: " + str(len(inverted_index.data.keys())))
+
+print("NUMBER OF INDEXED DOCUMENTS: "+ str(len(unique_links_set)))
+print("NUMBER OF UNIQUE WORDS: "+str(len(inverted_index.data.keys())))
+
 inverted_index.write()
 
 
