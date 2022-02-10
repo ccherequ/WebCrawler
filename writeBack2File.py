@@ -14,8 +14,13 @@ class writeBack2File:
 
     def write(self):
         with open('report.txt', 'a') as file:
-            file.write(json.dumps(self.data))
-            file.write("\n")
+            for token,lists in tokens_freq.items():
+                file.write(token + "\n")
+                for posting in lists:
+                    file.write(posting.docid + "\n")
+                    file.write(posting.tfidf + "\n")
+                    file.write(posting.file + "\n")
+                file.write("\n")
 
 
 if __name__ == "__main__":
