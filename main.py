@@ -15,22 +15,6 @@ def stem(token):
     stemmer = PorterStemmer()
     return stemmer.stem(token)
 
-
-def make_json_dict(file):
-    with open(file,'r') as f:
-        return json.load(f)
-
-
-def read_in(str_path):
-    list_of_files = list()
-    for entry in os.listdir(str_path):
-        x = os.path.join(str_path,entry)
-        for entry2 in os.listdir(x):
-            final = os.path.join(x,entry2)
-            list_of_files.append(final)
-    return list_of_files
-
-
 def tokenize(content):
     Tokenizer = RegexpTokenizer('[a-zA-Z\']{2,}') 
     tokens = Tokenizer.tokenize(content)
