@@ -39,7 +39,7 @@ def tokenize(content):
     tokens = Tokenizer.tokenize(content)
     return tokens
 
-inverted_index = writeBack2File
+inverted_index = writeBack2File()
 
 for entry in os.listdir(bp):
     x = os.path.join(bp, entry)
