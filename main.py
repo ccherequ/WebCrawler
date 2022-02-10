@@ -48,6 +48,9 @@ for entry in os.listdir(bp):
         content = json_dict['content']
         encoding = json_dict['encoding']
         soup = BeautifulSoup(content, 'html.parser')
+        text = soup.get_text()
+        print(url)
+        print(text)
         
 
 
