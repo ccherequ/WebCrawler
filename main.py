@@ -1,5 +1,4 @@
 import json
-#data_struct = {{}}
 import nltk
 from nltk.stem import PorterStemmer
 bp = 'TEST/'
