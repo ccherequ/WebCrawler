@@ -21,6 +21,11 @@ def tokenize(content):
     return tokens
 
 
+def make_json_dict(file):
+    with open(file,'r') as f:
+        return json.load(f)
+
+
 def writeURLDict():
     with open('book_keeping.txt', 'a') as file:
         for key, val in unique_links_dict.items():
