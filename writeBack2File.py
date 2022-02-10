@@ -5,7 +5,7 @@ class writeBack2File:
     def __init__(self):
         self.data = defaultdict(list)
     def addUrlToToken(self, token, url, frequency):
-        # posting = Posting(docid, freq, field)
+        # posting = Posting(token, url, frequency)
         #self.data[token].append(posting)
         if token in self.data:
             self.data[token][url] = frequency
