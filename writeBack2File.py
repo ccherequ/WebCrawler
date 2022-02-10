@@ -1,9 +1,12 @@
 import json
+from collections import defaultdict
 
 class writeBack2File:
     def __init__(self):
-        self.data = dict()
+        self.data = defaultdict(list)
     def addUrlToToken(self, token, url, frequency):
+        # posting = Posting(token, url, frequency)
+        #self.data[token].append(posting)
         if token in self.data:
             self.data[token][url] = frequency
         else:
