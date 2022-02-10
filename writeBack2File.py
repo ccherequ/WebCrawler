@@ -14,13 +14,16 @@ class writeBack2File:
 
     def write(self):
         with open('report.txt', 'a') as file:
-            for token,lists in tokens_freq.items():
-                file.write(token + "\n")
+            for token,lists in self.data.items():
+                file.write(token + ",")
                 for posting in lists:
-                    file.write(posting.docid + "\n")
-                    file.write(posting.tfidf + "\n")
-                    file.write(posting.file + "\n")
-                file.write("\n")
+                    file.write(str(posting.docid))
+                    file.write(", ")
+                    file.write(str(posting.tfidf))
+                    file.write(", ")
+                    file.write(str(posting.fields))
+                    file.write("\n")
+                #file.write("\n")
 
 
 if __name__ == "__main__":
