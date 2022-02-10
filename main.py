@@ -8,6 +8,7 @@ from nltk.tokenize import RegexpTokenizer
 from collections import Counter
 from writeBack2File import writeBack2File
 
+unique_links = set()
 def stem(token):
     stemmer = PorterStemmer()
     return stemmer.stem(token)
@@ -47,6 +48,7 @@ for entry in os.listdir(bp):
         final = os.path.join(x, entry2)  # file
         json_dict = make_json_dict(final)
         url = json_dict['url']
+        unique_links.add(url)
         content = json_dict['content']
         encoding = json_dict['encoding']
         soup = BeautifulSoup(content, 'html.parser')
@@ -58,6 +60,8 @@ for entry in os.listdir(bp):
         for k,v in tokens_freq.items():
             inverted_index.addUrlToToken(k,url,v)
 
+print("NUMBER OF INDEXED DOCUMENTS: "+ str(len(unique_links)))
+print("NUMBER OF UNIQUE WORDS: "+str(len(inverted_index.data.keys())))
 inverted_index.write()
 
 
