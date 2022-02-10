@@ -7,7 +7,7 @@ import os
 from bs4 import BeautifulSoup
 from nltk.tokenize import RegexpTokenizer
 from collections import Counter
-
+import writeBack2File
 
 def stem(token):
     stemmer = PorterStemmer()
@@ -40,6 +40,7 @@ def tokenize(content):
     tokens = Tokenizer.tokenize(content)
     return tokens
 
+inverted_index = writeBack2File()
 
 for entry in os.listdir(bp):
     x = os.path.join(bp, entry)
@@ -55,6 +56,11 @@ for entry in os.listdir(bp):
         for i in range(len(tokens)):
             tokens[i] = stem(tokens[i])
         tokens_freq = Counter(tokens)
+        for k,v in tokens_freq.items():
+            inverted_index.addUrlToToken(k,url,v)
+
+inverted_index.write()
+
 
         
 
