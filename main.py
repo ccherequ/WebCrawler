@@ -52,7 +52,10 @@ for entry in os.listdir(bp):
         soup = BeautifulSoup(content, 'html.parser')
         text = soup.get_text()
         tokens = tokenize(text)
+        for i in range(len(tokens)):
+            tokens[i] = stem(tokens[i])
         tokens_freq = Counter(tokens)
+
         
 
         
