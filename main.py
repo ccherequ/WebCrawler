@@ -29,7 +29,7 @@ def make_json_dict(file):
 def writeURLDict():
     with open('book_keeping.txt', 'a') as file:
         for key, val in unique_links_dict.items():
-            file.write(key, ' , ', val)
+            file.write(str(key)+',' + val)
             file.write("\n")
 
 
