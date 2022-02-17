@@ -4,18 +4,23 @@ from Posting import Posting
 class writeBack2File:
     def __init__(self):
         self.data = dict()
+        self.token_docid = dict()
     def addUrlToToken(self, token, docid, fre):
         P = Posting(docid, fre, 0)
         if token in self.data:
             self.data[token].append(P)
+            self.token_docid[token].add(docid)
         else:
             self.data[token] = list()
             self.data[token].append(P)
+            self.token_docid[token] = set()
+            self.token_docid[token].add(docid)
 
     def write(self):
         with open('report.txt', 'a') as file:
             for token,lists in self.data.items():
-                file.write(token + "\n")
+                file.write(token + "\n") 
+                file.write(token_docid[token] + "\n")
                 for posting in lists:
                     file.write(str(posting.docid))
                     file.write(",")
