@@ -1,6 +1,6 @@
 import json
 from Posting import Posting
-
+directory = "indices"
 class writeBack2File:
     def __init__(self):
         self.data = dict()
@@ -17,8 +17,13 @@ class writeBack2File:
             self.token_docid[token].add(docid)
 
     def write(self):
-        with open('report.txt', 'a') as file:
-            for token,lists in self.data.items():
+        for token,lists in self.data.items():
+            initial = token[0]
+            if initial.isdigit():
+                initial = "numeric"
+            path = directory + "/" + initial
+            with open(path, 'a') as file:
+                file.write("#####")
                 file.write(token + "\n") 
                 file.write(token_docid[token] + "\n")
                 for posting in lists:
@@ -28,7 +33,10 @@ class writeBack2File:
                     file.write(",")
                     file.write(str(posting.fields))
                     file.write("\n")
-                #file.write("\n")
+                file.close()
+
+
+
 
 
 if __name__ == "__main__":
