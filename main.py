@@ -1,7 +1,7 @@
 import json
 import nltk
 from nltk.stem import PorterStemmer
-bp = 'ANALYST/'
+bp = 'TEST/'
 import os
 from bs4 import BeautifulSoup
 from nltk.tokenize import RegexpTokenizer

@@ -22,10 +22,16 @@ class writeBack2File:
             if initial.isdigit():
                 initial = "numeric"
             path = directory + "/" + initial
+
             with open(path, 'a') as file:
-                file.write("#####")
+
+                token_file = open("token_index", "a")
+                token_file.write(token + "," + str(file.tell()) + "\n")
+                token_file.close()
+
                 file.write(token + "\n") 
-                file.write(token_docid[token] + "\n")
+                file.write(str(self.token_docid[token]))
+                file.write("\n")
                 for posting in lists:
                     file.write(str(posting.docid))
                     file.write(",")
