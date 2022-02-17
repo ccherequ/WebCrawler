@@ -20,9 +20,8 @@ def return_docids(token:str, token_index:dict)->set:
     file.seek(position)
     file.readline()
     temp = file.readline().strip()
-    print(temp)
     file.close()
-    return set(temp)
+    return eval(temp)
 
 
 if __name__ == "__main__":
