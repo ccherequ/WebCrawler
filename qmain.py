@@ -1,48 +1,82 @@
 
+
+directory = "indices"
+
+from nltk.stem import PorterStemmer
+
+
+def stem(token):
+    stemmer = PorterStemmer()
+    return stemmer.stem(token)
+
+
+def read_token_index()->dict:
+    file = open("token_index", "r")
+    result = dict()
+    for line in file:
+        line = line.split(",")
+        result[line[0]] = int(line[1])
+    return result
+
+
+def return_docids(token:str, token_index:dict)->set:
+    position = token_index[token]
+    initial = token[0]
+    if initial.isdigit():
+        initial = "numeric"
+    path = directory + "/" + initial
+    file = open(path, "r")
+    file.seek(position)
+    file.readline()
+    temp = file.readline().strip()
+    file.close()
+    return eval(temp)
+
+
+def andquery(query):
+    listx = list()
+    for i in query: 
+        word = stem(i)
+        listx.append(return_docids(word,index_of_index))
+
+    listx = sorted(listx, key = lambda x: len(x)) 
+    if len(listx)==1 or len(listx)==0:
+        return listx
+
+    set1 = listx[0]
+    for i in range(1,len(listx)):
+        set2 = listx[i]
+        set1 = set1.intersection(set2)
+
+    return set1
+    
+
+
+
+index_of_index = read_token_index()
+
+
 query = ""
 while query== "":
     query = input("ENTER QUERY: ") 
 
+
 query = query.split(" ")
-index_of_index = dict() 
-filex = open()
-def andquery(query):
-    listx = list()
-    for i in query:
-        first_letter = i[0]
-        
+final_doc_ids = andquery(query)
+print(final_doc_ids)
+
+
+
+
 
     
 
 
 
-
-
-    #we get queries from paramaters query1, query2, query3
-    #we first find each token in book keeping data structure 
-    #for each token we now have the file and position for that token 
-    #find both minimums using length of posting list, reading document frequency from file 
-    # query 1, query 2 documents, find the intersect
-    #i = 0 
-    #j = 0 
-    #all
-    #while true:
-    # if i == j:
-    #   all.append(doc)
-    #   i+=1 
-    #   j+=1
-    #if i < j:
-    #i+=1 
-    #if j<i: 
-    #    j+=1 
+#####first we create a dictionary to hold token: set fo
     
 
 
-
-    return 0 
-        
-
-        
 
 
 
