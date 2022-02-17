@@ -40,8 +40,9 @@ def andquery(query):
         listx.append(return_docids(word,index_of_index))
 
     listx = sorted(listx, key = lambda x: len(x)) 
-    if len(listx)==1 or len(listx)==0:
+    if len(listx)==1:
         return listx
+    
 
     set1 = listx[0]
     for i in range(1,len(listx)):
