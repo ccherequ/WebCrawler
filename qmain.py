@@ -102,5 +102,5 @@ if __name__ == "__main__":
         print(line[1])
         i+=1
 
-    print("Search done in", time.time()-start_clock, "seconds")
+    print("Search done in", time.time()-start_timer, "seconds")
 
