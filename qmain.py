@@ -2,7 +2,6 @@
 import time
 from collections import defaultdict
 from nltk.stem import PorterStemmer
-import jason
 directory = "indices"
 
 def stem(token):
@@ -42,7 +41,7 @@ def andquery(query):
 
     listx = sorted(listx, key = lambda x: len(x)) 
     if len(listx)==1:
-        return listx
+        return listx[0]
     
 
     set1 = listx[0]
@@ -53,7 +52,9 @@ def andquery(query):
 
 
 def rank(doc_set,query,token_index):
-    doc_freq = defaultdict(int)
+    doc_freq = dict()
+    for id in doc_set:
+        doc_freq[id] = 0
     for word in query: 
         position = token_index[stem(word)]
         initial = word[0]
@@ -67,13 +68,11 @@ def rank(doc_set,query,token_index):
         line = file.readline()
         while "#@" in line:
             line = line.split(',')
-            docid = int(line[0])
-            freq = int(line[1])
-            if docid in doc_set:
-                doc_freq[docid] += freq
+            if int(line[0]) in doc_set:
+                frequency = int(line[1])
+                doc_freq[int(line[0])] += frequency
             line = file.readline()
     return doc_freq
-
 
 
 
@@ -88,15 +87,23 @@ if __name__ == "__main__":
     start_timer = time.time() #start timer
     query = query.split(" ")
     final_doc_ids = andquery(query)
-    rank_dict = rank(final_doc_ids,query, index_of_index)
-    with open('book_keeping.txt','r') as file:
-        url_docid_dict = json.load(file)
-        file.close()
+    rank_dict = rank(final_doc_ids, query, index_of_index)
     top_n = 5
     i = 0
+    result_id_list = list()
     for docid in sorted(rank_dict, key = rank_dict.get, reverse = True): 
         if i <= top_n:
-            print(url_docid_dict[docid])
+            result_id_list.append(docid)
             i += 1
+
+    for docid in result_id_list:
+        finding = True
+        with open('book_keeping.txt', 'r') as file:
+            while finding:
+                line = file.readline()
+                line = line.split(",")
+                if docid == int(line[0]):
+                    print(line[1])
+                    finding = False
     print("Search done in", time.time()-start_timer, "seconds")
 
