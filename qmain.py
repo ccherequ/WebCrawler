@@ -72,6 +72,8 @@ def rank(doc_set,query,token_index):
             line = file.readline()
     return doc_freq
 
+def get
+
 
 if __name__ == "__main__":
     index_of_index = read_token_index()
@@ -85,7 +87,14 @@ if __name__ == "__main__":
     query = query.split(" ")
     final_doc_ids = andquery(query)
     rank_dict = rank(final_doc_ids,query, index_of_index)
-    rank_dict = sorted(rank_dict.items(), key = lambda x: x[1])
+    top_n = 5
+    i = 0
+    for docid in sorted(rank_dict, key = rank_dict.get, reverse = True): 
+        if i <= top_n:
+            print(docid)
+            i += 1
+        
+        
 
     i = 0 
     r = 5
