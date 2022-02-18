@@ -1,5 +1,5 @@
 
-
+import time
 directory = "indices"
 
 from nltk.stem import PorterStemmer
@@ -59,12 +59,14 @@ index_of_index = read_token_index()
 
 query = ""
 while query== "":
-    query = input("ENTER QUERY: ") 
+    query = input("ENTER QUERY: ")
+    start_clock = time.time()
 
 
 query = query.split(" ")
 final_doc_ids = andquery(query)
 print(final_doc_ids)
+print("Search done in", time.time()-start_clock, "seconds")
 
 
 
