@@ -27,7 +27,7 @@ def make_json_dict(file):
         return json.load(f)
 
 
-def writeURLDict():
+def writeURLDict(unique_links_dict):
     with open('book_keeping.txt', 'a') as file:
         for key, val in unique_links_dict.items():
             file.write(str(key)+',' + val)
@@ -46,6 +46,7 @@ for entry in os.listdir(bp):
             unique_links_set.add(url)
             unique_links_dict[counter] = url
             counter += 1
+
         content = json_dict['content']
         encoding = json_dict['encoding']
         soup = BeautifulSoup(content, 'html.parser')
@@ -57,7 +58,7 @@ for entry in os.listdir(bp):
         for k,v in tokens_freq.items():
             inverted_index.addUrlToToken(k,counter,v)
 
-
+writeURLDict(unique_links_dict)
 print("NUMBER OF INDEXED DOCUMENTS: "+ str(len(unique_links_set)))
 print("NUMBER OF UNIQUE WORDS: "+str(len(inverted_index.data.keys())))
 

@@ -77,15 +77,10 @@ def rank(doc_set,query,token_index):
             line = file.readline()
     return doc_freq
 
-            
-    #for word in query:
-        #go to word index
-        #for word posting if posting doc in set:
-    #        docfreq[doc]+= freq 
-    #sort docfreq 
 
 
 index_of_index = read_token_index()
+
 
 
 query = ""
@@ -104,9 +99,13 @@ if r> len(rank_dict):
     r = len(rank_dict)
 
 
+with open('book_keeping.txt', 'a') as file:
+        listx = file.readlines()
 while i< r:
     doc = rank_dict[i][0] 
-    print(doc)
+    line = listx[doc] 
+    line = line.split(',')
+    print(line[1])
     i+=1 
 
 
