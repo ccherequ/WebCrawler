@@ -96,6 +96,7 @@ if __name__ == "__main__":
         file.close()
     top_n = 5
     i = 0
+    print(rank_dict)
     for docid in sorted(rank_dict, key = rank_dict.get, reverse = True): 
         if i < top_n:
             print(url_docid_dict[str(docid)])

@@ -63,7 +63,7 @@ if __name__ == "__main__":
                 tokens[i] = stem(tokens[i])
             tokens_freq = Counter(tokens)
             for k,v in tokens_freq.items():
-                inverted_index.addUrlToToken(k,counter,v)
+                inverted_index.addUrlToToken(k,counter-1,v)
 
     writeURLDict(unique_links_dict)
     print("NUMBER OF INDEXED DOCUMENTS: "+ str(len(unique_links_set)))
