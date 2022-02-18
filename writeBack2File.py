@@ -39,7 +39,7 @@ class writeBack2File:
                     file.write(str(posting.tfidf))
                     file.write(",")
                     file.write(str(posting.fields))
-                    file.write("\n")
+                    file.write("#####\n")
                 file.close()
 
 
