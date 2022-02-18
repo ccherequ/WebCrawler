@@ -8,9 +8,7 @@ from nltk.tokenize import RegexpTokenizer
 from collections import Counter
 from writeBack2File import writeBack2File
 
-unique_links_dict = dict()
-unique_links_set = set()
-counter = 0
+
 
 def stem(token):
     stemmer = PorterStemmer()
@@ -34,35 +32,39 @@ def writeURLDict(unique_links_dict):
             file.write("\n")
 
 
-inverted_index = writeBack2File()
+if __name__ == "__main__":
+    inverted_index = writeBack2File()
+    unique_links_dict = dict()
+    unique_links_set = set()
+    counter = 0
+    for entry in os.listdir(bp):
+        x = os.path.join(bp, entry)
+        for entry2 in os.listdir(x):
+            final = os.path.join(x, entry2)  # file
+            json_dict = make_json_dict(final)
+            url = json_dict['url']
+            print(url)
+            if url not in unique_links_set:
+                unique_links_set.add(url)
+                unique_links_dict[counter] = url
+                counter += 1
 
-for entry in os.listdir(bp):
-    x = os.path.join(bp, entry)
-    for entry2 in os.listdir(x):
-        final = os.path.join(x, entry2)  # file
-        json_dict = make_json_dict(final)
-        url = json_dict['url']
-        if url not in unique_links_set:
-            unique_links_set.add(url)
-            unique_links_dict[counter] = url
-            counter += 1
+            content = json_dict['content']
+            encoding = json_dict['encoding']
+            soup = BeautifulSoup(content, 'html.parser')
+            text = soup.get_text()
+            tokens = tokenize(text)
+            for i in range(len(tokens)):
+                tokens[i] = stem(tokens[i])
+            tokens_freq = Counter(tokens)
+            for k,v in tokens_freq.items():
+                inverted_index.addUrlToToken(k,counter,v)
 
-        content = json_dict['content']
-        encoding = json_dict['encoding']
-        soup = BeautifulSoup(content, 'html.parser')
-        text = soup.get_text()
-        tokens = tokenize(text)
-        for i in range(len(tokens)):
-            tokens[i] = stem(tokens[i])
-        tokens_freq = Counter(tokens)
-        for k,v in tokens_freq.items():
-            inverted_index.addUrlToToken(k,counter,v)
+    writeURLDict(unique_links_dict)
+    print("NUMBER OF INDEXED DOCUMENTS: "+ str(len(unique_links_set)))
+    print("NUMBER OF UNIQUE WORDS: "+str(len(inverted_index.data.keys())))
 
-writeURLDict(unique_links_dict)
-print("NUMBER OF INDEXED DOCUMENTS: "+ str(len(unique_links_set)))
-print("NUMBER OF UNIQUE WORDS: "+str(len(inverted_index.data.keys())))
-
-inverted_index.write()
+    inverted_index.write()
 
 
         

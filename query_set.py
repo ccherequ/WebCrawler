@@ -2,7 +2,7 @@
 directory = "indices"
 
 def read_token_index()->dict:
-    file = open("token_index", "r")
+    file = open("token_index.txt", "r")
     result = dict()
     for line in file:
         line = line.split(",")
@@ -26,5 +26,5 @@ def return_docids(token:str, token_index:dict)->set:
 
 if __name__ == "__main__":
     d = read_token_index()
-    print(return_docids("bren", d))
+    print(return_docids("by", d))
     

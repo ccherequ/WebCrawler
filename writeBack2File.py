@@ -21,12 +21,12 @@ class writeBack2File:
             initial = token[0]
             if initial.isdigit():
                 initial = "numeric"
-            path = directory + "/" + initial
+            path = directory + "/" + initial + ".txt"
 
             with open(path, 'a') as file:
 
                 
-                token_file = open("token_index", "a")
+                token_file = open("token_index.txt", "a")
                 token_file.write(token + "," + repr(file.tell()) + "\n")
                 token_file.close()
 
@@ -39,7 +39,7 @@ class writeBack2File:
                     file.write(str(posting.tfidf))
                     file.write(",")
                     file.write(str(posting.fields))
-                    file.write(",#####\n")
+                    file.write(",#@\n")
                 file.close()
 
 
