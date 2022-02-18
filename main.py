@@ -17,7 +17,7 @@ def stem(token):
     return stemmer.stem(token)
 
 def tokenize(content):
-    Tokenizer = RegexpTokenizer('[a-zA-Z0-9\']{2,}') 
+    Tokenizer = RegexpTokenizer('[a-zA-Z0-9]{1,}\'{,1}[a-zA-Z0-9]') 
     tokens = Tokenizer.tokenize(content)
     return tokens
 
