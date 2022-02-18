@@ -41,7 +41,7 @@ def andquery(query):
 
     listx = sorted(listx, key = lambda x: len(x)) 
     if len(listx)==1:
-        return listx
+        return listx[0]
     
 
     set1 = listx[0]
