@@ -2,7 +2,7 @@
 import time
 from collections import defaultdict
 from nltk.stem import PorterStemmer
-import jason
+import json
 directory = "indices"
 
 def stem(token):
@@ -42,7 +42,7 @@ def andquery(query):
 
     listx = sorted(listx, key = lambda x: len(x)) 
     if len(listx)==1:
-        return listx
+        return listx[0]
     
 
     set1 = listx[0]
@@ -53,7 +53,9 @@ def andquery(query):
 
 
 def rank(doc_set,query,token_index):
-    doc_freq = defaultdict(int)
+    doc_freq = dict()
+    for id in doc_set:
+        doc_freq[id] = 0
     for word in query: 
         position = token_index[stem(word)]
         initial = word[0]
@@ -67,10 +69,10 @@ def rank(doc_set,query,token_index):
         line = file.readline()
         while "#@" in line:
             line = line.split(',')
+            frequency = int(line[1])
             docid = int(line[0])
-            freq = int(line[1])
             if docid in doc_set:
-                doc_freq[docid] += freq
+                doc_freq[docid] += frequency
             line = file.readline()
     return doc_freq
 
@@ -95,8 +97,8 @@ if __name__ == "__main__":
     top_n = 5
     i = 0
     for docid in sorted(rank_dict, key = rank_dict.get, reverse = True): 
-        if i <= top_n:
-            print(url_docid_dict[docid])
+        if i < top_n:
+            print(url_docid_dict[str(docid)])
             i += 1
     print("Search done in", time.time()-start_timer, "seconds")
 

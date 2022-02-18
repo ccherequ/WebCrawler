@@ -1,7 +1,7 @@
 import json
 import nltk
 from nltk.stem import PorterStemmer
-bp = 'TEST/'
+bp = 'ANALYST/'
 import os
 from bs4 import BeautifulSoup
 from nltk.tokenize import RegexpTokenizer
@@ -34,6 +34,7 @@ def make_json_dict(file):
 def writeURLDict(unique_links_dict):
     with open('book_keeping.txt', 'w') as file:
         file.write(json.dumps(unique_links_dict))
+        file.close()
 
 
 
@@ -48,7 +49,6 @@ if __name__ == "__main__":
             final = os.path.join(x, entry2)  # file
             json_dict = make_json_dict(final)
             url = json_dict['url']
-            print(url)
             if url not in unique_links_set:
                 unique_links_set.add(url)
                 unique_links_dict[counter] = url
