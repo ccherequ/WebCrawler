@@ -25,11 +25,16 @@ def make_json_dict(file):
         return json.load(f)
 
 
+# def writeURLDict(unique_links_dict):
+#     with open('book_keeping.txt', 'a') as file:
+#         for key, val in unique_links_dict.items():
+#             file.write(str(key)+',' + val)
+#             file.write("\n")
+
 def writeURLDict(unique_links_dict):
-    with open('book_keeping.txt', 'a') as file:
-        for key, val in unique_links_dict.items():
-            file.write(str(key)+',' + val)
-            file.write("\n")
+    with open('book_keeping.txt', 'w') as file:
+        file.write(json.dumps(unique_links_dict))
+
 
 
 if __name__ == "__main__":
