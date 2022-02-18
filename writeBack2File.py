@@ -24,8 +24,6 @@ class writeBack2File:
             path = directory + "/" + initial + ".txt"
 
             with open(path, 'a') as file:
-
-                
                 token_file = open("token_index.txt", "a")
                 token_file.write(token + "," + repr(file.tell()) + "\n")
                 token_file.close()
