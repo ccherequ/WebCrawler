@@ -25,6 +25,7 @@ class writeBack2File:
 
             with open(path, 'a') as file:
 
+                
                 token_file = open("token_index", "a")
                 token_file.write(token + "," + repr(file.tell()) + "\n")
                 token_file.close()

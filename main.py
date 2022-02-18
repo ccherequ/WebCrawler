@@ -11,12 +11,13 @@ from writeBack2File import writeBack2File
 unique_links_dict = dict()
 unique_links_set = set()
 counter = 0
+
 def stem(token):
     stemmer = PorterStemmer()
     return stemmer.stem(token)
 
 def tokenize(content):
-    Tokenizer = RegexpTokenizer('[a-zA-Z\']{2,}') 
+    Tokenizer = RegexpTokenizer('[a-zA-Z0-9\']{2,}') 
     tokens = Tokenizer.tokenize(content)
     return tokens
 
