@@ -1,9 +1,8 @@
 
-
-directory = "indices"
+import time
 from collections import defaultdict
 from nltk.stem import PorterStemmer
-
+directory = "indices"
 
 def stem(token):
     stemmer = PorterStemmer()
@@ -24,7 +23,7 @@ def return_docids(token:str, token_index:dict)->set:
     initial = token[0]
     if initial.isdigit():
         initial = "numeric"
-    path = directory + "/" + initial
+    path = directory + "/" + initial + ".txt"
     file = open(path, "r")
     file.seek(position)
     file.readline()
@@ -55,11 +54,11 @@ def andquery(query):
 def rank(doc_set,query,token_index):
     doc_freq = defaultdict(int)
     for word in query: 
-        position = token_index[word]
+        position = token_index[stem(word)]
         initial = word[0]
         if initial.isdigit():
             initial = "numeric"
-        path = directory + "/" + initial
+        path = directory + "/" + initial + ".txt"
         file = open(path, "r")
         file.seek(position)
         file.readline()
@@ -82,7 +81,7 @@ if __name__ == "__main__":
     while query== "":
         query = input("ENTER QUERY: ") 
 
-
+    start_timer = time.time() #start timer
     query = query.split(" ")
     final_doc_ids = andquery(query)
     rank_dict = rank(final_doc_ids,query, index_of_index)
@@ -95,11 +94,13 @@ if __name__ == "__main__":
 
 
     with open('book_keeping.txt', 'a') as file:
-            listx = file.readlines()
+            listx = file.readline()
     while i< r:
         doc = rank_dict[i][0] 
         line = listx[doc] 
         line = line.split(',')
         print(line[1])
-        i+=1 
+        i+=1
+
+    print("Search done in", time.time()-start_clock, "seconds")
 
