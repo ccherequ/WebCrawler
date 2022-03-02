@@ -45,11 +45,11 @@ class writeBack2File:
                     tf = 1 + math.log(posting.tfidf, 10)
                     tfidf = tf*idf
                     file.write(str(posting.docid))
-                    file.write(",")
+                    file.write("||")
                     file.write(str(tfidf))
-                    file.write(",")
+                    file.write("||")
                     file.write(str(posting.fields))
-                    file.write(",#@\n")
+                    file.write("||#@\n")
                 file.close()
 
 

@@ -15,7 +15,7 @@ def return_docids(token:str, token_index:dict)->set:
     initial = token[0]
     if initial.isdigit():
         initial = "numeric"
-    path = directory + "/" + initial
+    path = directory + "/" + initial + ".txt"
     file = open(path, "r")
     file.seek(position)
     file.readline()
@@ -24,7 +24,28 @@ def return_docids(token:str, token_index:dict)->set:
     return eval(temp)
 
 
+def return_positions(token:str, docid: int, token_index:dict)->list:
+    position = token_index[token]
+    initial = token[0]
+    if initial.isdigit():
+        initial = "numeric"
+    path = directory + "/" + initial + ".txt"
+    file = open(path, "r")
+    file.seek(position)
+    file.readline()
+    file.readline()
+    line = file.readline()
+    while "#@" in line:
+        line = line.split('||')
+        if int(line[0]) == docid:
+            return eval(line[2])
+        line = file.readline()
+    file.close()
+
+
 if __name__ == "__main__":
     d = read_token_index()
-    print(return_docids("by", d))
+    #print(return_docids("by", d))
+    print(return_positions("donald", 1, d))
+    print(type(return_positions("donald", 1, d)))
     
