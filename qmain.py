@@ -3,6 +3,8 @@ import time
 from collections import defaultdict
 from nltk.stem import PorterStemmer
 import json
+from collections import Counter
+import math
 directory = "indices"
 
 def stem(token):
@@ -50,6 +52,21 @@ def andquery(query):
         set2 = listx[i]
         set1 = set1.intersection(set2)
     return set1
+
+
+def query_tfidf(query, numDocs):
+    q_terms = []
+    for i in query:
+        word = stem(i)
+        q_terms.append(word)
+
+    q_terms = Counter(q_terms)
+    tf_wt = []
+    for k, v in q_terms.items():
+        tf_wt.append([k, (1 + math.log(v, 10))])
+
+
+
 
 
 def rank(doc_set,query,token_index):
