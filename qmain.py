@@ -54,18 +54,48 @@ def andquery(query):
     return set1
 
 
-def query_tfidf(query, numDocs):
+def query_tfidf(query, numDocs, token_index):
+    doc_nliz_list = []
     q_terms = []
-    for i in query:
+    tf_wt = []
+    nliz = []
+    ls1 = [] 
+    #######query 
+    for i in query:  #stems
         word = stem(i)
         q_terms.append(word)
-
-    q_terms = Counter(q_terms)
-    tf_wt = []
+    q_terms = Counter(q_terms) #query frequency dict
     for k, v in q_terms.items():
-        tf_wt.append([k, (1 + math.log(v, 10))])
+        tf_wt.append([k, (1 + math.log(v, 10))]) 
+    wt_list = []
+    for k,v in q_terms.items():  #build weight list
+        setx = return_docids(k, token_index) 
+        wt = math.log(numDocs/len(setx)) * q_terms[k] 
+        wt_list.append(wt)
+    for i in wt_list: #build nliz 
+        ls1.append(i * i) 
+    sum_root = math.sqrt(sum(ls1)) 
+    for  i in wt_list:
+        nliz.append(i/sum_root)
+
+    
 
 
+        
+
+
+    return nliz
+
+
+
+
+
+
+    
+    
+
+
+    
 
 
 
@@ -98,7 +128,9 @@ def rank(doc_set,query,token_index):
 
 if __name__ == "__main__":
     index_of_index = read_token_index()
-
+    with open('book_keeping.txt','r') as file:
+        url_docid_dict = json.load(file)
+        file.close()
 
     query = ""
     while query== "":
@@ -108,9 +140,7 @@ if __name__ == "__main__":
     query = query.split(" ")
     final_doc_ids = andquery(query)
     rank_dict = rank(final_doc_ids,query, index_of_index)
-    with open('book_keeping.txt','r') as file:
-        url_docid_dict = json.load(file)
-        file.close()
+    
     top_n = 5
     i = 0
     for docid in sorted(rank_dict, key = rank_dict.get, reverse = True): 
