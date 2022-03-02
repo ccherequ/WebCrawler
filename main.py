@@ -61,9 +61,17 @@ if __name__ == "__main__":
             tokens = tokenize(text)
             for i in range(len(tokens)):
                 tokens[i] = stem(tokens[i])
-            tokens_freq = Counter(tokens)
-            for k,v in tokens_freq.items():
-                inverted_index.addUrlToToken(k,counter-1,v)
+                
+            tokens_freq = dict()
+            for i in range(len(tokens)):
+                if tokens[i] in tokens_freq:
+                    tokens_freq[tokens[i]].append(i)
+                else:
+                    tokens_freq[tokens[i]] = []
+                    tokens_freq[tokens[i]].append(i)
+
+            for k,positions in tokens_freq.items():
+                inverted_index.addUrlToToken(k,counter-1,len(positions), positions)
 
     writeURLDict(unique_links_dict)
     print("NUMBER OF INDEXED DOCUMENTS: "+ str(len(unique_links_set)))
