@@ -1,4 +1,5 @@
 import json
+import math
 from Posting import Posting
 directory = "indices"
 class writeBack2File:
@@ -17,6 +18,11 @@ class writeBack2File:
             self.token_docid[token].add(docid)
 
     def write(self):
+        with open('book_keeping.txt','r') as file:
+            url_docid_dict = json.load(file)
+            total_files = max(url_docid_dict.keys())
+            file.close()
+
         for token,lists in self.data.items():
             initial = token[0]
             if initial.isdigit():
@@ -28,13 +34,19 @@ class writeBack2File:
                 token_file.write(token + "," + repr(file.tell()) + "\n")
                 token_file.close()
 
+                N = int(total_files) + 1
+                df = len(self.token_docid[token])
+                idf = math.log(N/df, 10)
+
                 file.write(token + "\n") 
                 file.write(str(self.token_docid[token]))
                 file.write("\n")
                 for posting in lists:
+                    tf = 1 + math.log(posting.tfidf, 10)
+                    tfidf = tf*idf
                     file.write(str(posting.docid))
                     file.write(",")
-                    file.write(str(posting.tfidf))
+                    file.write(str(tfidf))
                     file.write(",")
                     file.write(str(posting.fields))
                     file.write(",#@\n")

@@ -1,7 +1,7 @@
 import json
 import nltk
 from nltk.stem import PorterStemmer
-bp = 'ANALYST/'
+bp = 'TEST/'
 import os
 from bs4 import BeautifulSoup
 from nltk.tokenize import RegexpTokenizer
@@ -61,7 +61,7 @@ if __name__ == "__main__":
             tokens = tokenize(text)
             for i in range(len(tokens)):
                 tokens[i] = stem(tokens[i])
-                
+
             tokens_freq = dict()
             for i in range(len(tokens)):
                 if tokens[i] in tokens_freq:
