@@ -1,1 +1,0 @@
-{"0": "https://www.cs.uci.edu/seminar-series-archive/?seminar_id=166", "1": "https://www.cs.uci.edu/cpri-receives-1-4m-gift-for-securing-the-seams-of-the-internet-of-everything/#more-2047", "2": "https://www.cs.uci.edu/news/page/11/", "3": "https://www.cs.uci.edu/event/c-mohan-2/?ical=1"}
