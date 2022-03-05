@@ -119,6 +119,7 @@ def query_tfidf(query, numDocs, doc_set, token_index):
         i = 0 
         while i!= len(nliz):
             sum += nliz[i]* doc_nliz_list[i] 
+            i+=1
         final_scores[docid] = sum
 
     # sum = 0
