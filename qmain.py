@@ -1,6 +1,7 @@
 
 import time
 from collections import defaultdict
+from typing import final
 from nltk.stem import PorterStemmer
 import json
 from collections import Counter
@@ -60,6 +61,8 @@ def query_tfidf(query, numDocs, doc_set, token_index):
     tf_wt = []
     nliz = []
     ls1 = [] 
+    final_scores = dict()
+
     #######query 
     for i in query:  #stems
         word = stem(i)
@@ -78,12 +81,15 @@ def query_tfidf(query, numDocs, doc_set, token_index):
     for  i in wt_list:
         nliz.append(i/sum_root)
 
+
+
     # for term in query:
     #   get all postings for term
     #   for term_posting:
     #       if posting.docid in docset:
     #           dict[term] = list.append([docid, nlize])
-    doc_nlize_dict = {}
+
+    doc_nlize_dict = defaultdict(list)
     for k, v in q_terms.items():
         position = token_index[k]
         initial = k[0]
@@ -100,8 +106,20 @@ def query_tfidf(query, numDocs, doc_set, token_index):
             doc_nlize = float(line[1])
             docid = int(line[0])
             if docid in doc_set:
-                doc_nlize_dict[k] = [docid, doc_nlize]
+                doc_nlize_dict[k].append([docid, doc_nlize])
             line = file.readline()
+    
+    for docid in doc_set:
+        doc_nliz_list = []
+        sum = 0 
+        for key in doc_nlize_dict.keys():
+            for x,y in doc_nlize_dict[key]: 
+                if x == docid: 
+                    doc_nliz_list.append(y)
+        i = 0 
+        while i!= len(nliz):
+            sum += nliz[i]* doc_nliz_list[i] 
+        final_scores[docid] = sum
 
     # sum = 0
     # for docid in docset:
@@ -113,19 +131,7 @@ def query_tfidf(query, numDocs, doc_set, token_index):
     #   for nlize in doc_nlize_list:
     #       sum += nlize * term_nlize
 
-    return nliz
-
-
-
-
-
-
-    
-    
-
-
-    
-
+    return final_scores
 
 
 def rank(doc_set,query,token_index):
