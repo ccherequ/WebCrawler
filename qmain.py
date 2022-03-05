@@ -112,8 +112,8 @@ def query_tfidf(query, numDocs, doc_set, token_index):
     for docid in doc_set:
         doc_nliz_list = []
         sum = 0 
-        for key in doc_nlize_dict.keys():
-            for x,y in doc_nlize_dict[key]: 
+        for term in q_terms.keys():
+            for x,y in doc_nlize_dict[term]: 
                 if x == docid: 
                     doc_nliz_list.append(y)
         i = 0 
