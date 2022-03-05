@@ -23,6 +23,8 @@ def read_token_index()->dict:
 
 
 def return_docids(token:str, token_index:dict)->set:
+    if token not in token_index.keys():
+        return []
     position = token_index[token]
     initial = token[0]
     if initial.isdigit():
@@ -66,7 +68,8 @@ def query_tfidf(query, numDocs, doc_set, token_index):
     #######query 
     for i in query:  #stems
         word = stem(i)
-        q_terms.append(word)
+        if word in token_index.keys():
+            q_terms.append(word)
     q_terms = Counter(q_terms) #query frequency dict
     for k, v in q_terms.items():
         tf_wt.append([k, (1 + math.log(v, 10))]) 
@@ -76,8 +79,11 @@ def query_tfidf(query, numDocs, doc_set, token_index):
         wt = math.log(numDocs/len(setx)) * q_terms[k] 
         wt_list.append(wt)
     for i in wt_list: #build nliz 
-        ls1.append(i * i) 
-    sum_root = math.sqrt(sum(ls1)) 
+        ls1.append(i * i)
+    list_sum = 0
+    for i in ls1:
+        list_sum += i
+    sum_root = math.sqrt(list_sum)
     for  i in wt_list:
         nliz.append(i/sum_root)
 
