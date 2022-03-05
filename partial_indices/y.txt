@@ -1,1 +1,0 @@
-{"you": ["{\"py/object\": \"Posting.Posting\", \"docid\": 2, \"tfidf\": 2, \"fields\": [719, 730]}"]}

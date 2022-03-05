@@ -1,7 +1,7 @@
 import json
 import nltk
 from nltk.stem import PorterStemmer
-bp = 'ANALYST/'
+bp = 'TEST/'
 import os
 from bs4 import BeautifulSoup
 from nltk.tokenize import RegexpTokenizer
@@ -69,6 +69,13 @@ if __name__ == "__main__":
                 else:
                     tokens_freq[tokens[i]] = []
                     tokens_freq[tokens[i]].append(i)
+                    
+                if i > 0:
+                    if tokens[i-1]+tokens[i] in tokens_freq:
+                        tokens_freq[tokens[i-1]+tokens[i]].append(i-1)
+                    else:
+                        tokens_freq[tokens[i-1]+tokens[i]] = []
+                        tokens_freq[tokens[i-1]+tokens[i]].append(i-1)
 
             for k,positions in tokens_freq.items():
                 inverted_index.addUrlToToken(k,counter-1,len(positions), positions)

@@ -1,1 +1,0 @@
-{"zijia": ["{\"py/object\": \"Posting.Posting\", \"docid\": 2, \"tfidf\": 1, \"fields\": [728]}"], "zarat": ["{\"py/object\": \"Posting.Posting\", \"docid\": 2, \"tfidf\": 1, \"fields\": [97]}"]}

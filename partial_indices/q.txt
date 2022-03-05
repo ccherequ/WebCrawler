@@ -1,1 +1,0 @@
-{"quickli": ["{\"py/object\": \"Posting.Posting\", \"docid\": 2, \"tfidf\": 1, \"fields\": [203]}"], "queri": ["{\"py/object\": \"Posting.Posting\", \"docid\": 0, \"tfidf\": 1, \"fields\": [142]}"]}
