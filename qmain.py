@@ -174,7 +174,8 @@ if __name__ == "__main__":
     start_timer = time.time() #start timer
     query = query.split(" ")
     final_doc_ids = andquery(query)
-    rank_dict = rank(final_doc_ids,query, index_of_index)
+
+    rank_dict = query_tfidf(query,len(url_docid_dict),final_doc_ids,index_of_index)
     
     top_n = 5
     i = 0
