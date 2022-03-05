@@ -54,7 +54,7 @@ def andquery(query):
     return set1
 
 
-def query_tfidf(query, numDocs, token_index):
+def query_tfidf(query, numDocs, doc_set, token_index):
     doc_nliz_list = []
     q_terms = []
     tf_wt = []
@@ -78,11 +78,40 @@ def query_tfidf(query, numDocs, token_index):
     for  i in wt_list:
         nliz.append(i/sum_root)
 
-    
+    # for term in query:
+    #   get all postings for term
+    #   for term_posting:
+    #       if posting.docid in docset:
+    #           dict[term] = list.append([docid, nlize])
+    doc_nlize_dict = {}
+    for k, v in q_terms.items():
+        position = token_index[k]
+        initial = k[0]
+        if initial.isdigit():
+            initial = "numeric"
+        path = directory + "/" + initial + ".txt"
+        file = open(path, "r")
+        file.seek(position)
+        file.readline()
+        file.readline()
+        line = file.readline()
+        while "#@" in line:
+            line = line.split('||')
+            doc_nlize = float(line[1])
+            docid = int(line[0])
+            if docid in doc_set:
+                doc_nlize_dict[k] = [docid, doc_nlize]
+            line = file.readline()
 
-
-        
-
+    # sum = 0
+    # for docid in docset:
+    #   for term in dict:
+    #       for dic/nlize pair:
+        #       if value[0] == docid
+        #           doc_nlize_list.append([value[1]])
+    #   score = 0
+    #   for nlize in doc_nlize_list:
+    #       sum += nlize * term_nlize
 
     return nliz
 
