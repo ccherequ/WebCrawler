@@ -37,7 +37,7 @@ class writeBack2File:
             self.token_docid[token].add(docid)
 
 
-        if self.count > 5000:
+        if self.count > 10:
             self.partialIndices()
             count = 0
 
