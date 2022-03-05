@@ -24,7 +24,7 @@ def read_token_index()->dict:
 
 def return_docids(token:str, token_index:dict)->set:
     if token not in token_index.keys():
-        return []
+        return set()
     position = token_index[token]
     initial = token[0]
     if initial.isdigit():
@@ -45,10 +45,9 @@ def andquery(query):
         listx.append(return_docids(word,index_of_index))
 
 
-    listx = sorted(listx, key = lambda x: len(x)) 
+    listx = sorted(listx, key = lambda x: len(x))
     if len(listx)==1:
         return listx[0]
-    
 
     set1 = listx[0]
     for i in range(1,len(listx)):
@@ -72,11 +71,11 @@ def query_tfidf(query, numDocs, doc_set, token_index):
             q_terms.append(word)
     q_terms = Counter(q_terms) #query frequency dict
     for k, v in q_terms.items():
-        tf_wt.append([k, (1 + math.log(v, 10))]) 
+        tf_wt.append([k, (1 + math.log(v, 10))])
     wt_list = []
     for k,v in q_terms.items():  #build weight list
-        setx = return_docids(k, token_index) 
-        wt = math.log(numDocs/len(setx)) * q_terms[k] 
+        setx = return_docids(k, token_index)
+        wt = math.log(numDocs/len(setx)) * q_terms[k]
         wt_list.append(wt)
     for i in wt_list: #build nliz 
         ls1.append(i * i)
@@ -86,7 +85,6 @@ def query_tfidf(query, numDocs, doc_set, token_index):
     sum_root = math.sqrt(list_sum)
     for  i in wt_list:
         nliz.append(i/sum_root)
-
 
 
     # for term in query:
@@ -127,6 +125,7 @@ def query_tfidf(query, numDocs, doc_set, token_index):
             sum += nliz[i]* doc_nliz_list[i] 
             i+=1
         final_scores[docid] = sum
+        print (final_scores)
 
     # sum = 0
     # for docid in docset:
