@@ -26,6 +26,10 @@ class writeBack2File:
         if initial in self.bigData:
             if token in self.bigData[initial]:
                 self.bigData[initial][token].append(P)
+            else:
+                self.bigData[initial][token] = list()
+                self.bigData[initial][token].append(P)
+
         else:
             self.bigData[initial] = dict()
             self.bigData[initial][token] = list()
@@ -37,7 +41,7 @@ class writeBack2File:
             self.token_docid[token].add(docid)
 
 
-        if self.count > 10:
+        if self.count > 5000:
             self.partialIndices()
             count = 0
 
