@@ -1,6 +1,7 @@
 
 import time
 from collections import defaultdict
+from typing import final
 from nltk.stem import PorterStemmer
 import json
 from collections import Counter
@@ -22,6 +23,8 @@ def read_token_index()->dict:
 
 
 def return_docids(token:str, token_index:dict)->set:
+    if token not in token_index.keys():
+        return []
     position = token_index[token]
     initial = token[0]
     if initial.isdigit():
@@ -54,16 +57,19 @@ def andquery(query):
     return set1
 
 
-def query_tfidf(query, numDocs, token_index):
+def query_tfidf(query, numDocs, doc_set, token_index):
     doc_nliz_list = []
     q_terms = []
     tf_wt = []
     nliz = []
     ls1 = [] 
+    final_scores = dict()
+
     #######query 
     for i in query:  #stems
         word = stem(i)
-        q_terms.append(word)
+        if word in token_index.keys():
+            q_terms.append(word)
     q_terms = Counter(q_terms) #query frequency dict
     for k, v in q_terms.items():
         tf_wt.append([k, (1 + math.log(v, 10))]) 
@@ -73,30 +79,66 @@ def query_tfidf(query, numDocs, token_index):
         wt = math.log(numDocs/len(setx)) * q_terms[k] 
         wt_list.append(wt)
     for i in wt_list: #build nliz 
-        ls1.append(i * i) 
-    sum_root = math.sqrt(sum(ls1)) 
+        ls1.append(i * i)
+    list_sum = 0
+    for i in ls1:
+        list_sum += i
+    sum_root = math.sqrt(list_sum)
     for  i in wt_list:
         nliz.append(i/sum_root)
 
+
+
+    # for term in query:
+    #   get all postings for term
+    #   for term_posting:
+    #       if posting.docid in docset:
+    #           dict[term] = list.append([docid, nlize])
+
+    doc_nlize_dict = defaultdict(list)
+    for k, v in q_terms.items():
+        position = token_index[k]
+        initial = k[0]
+        if initial.isdigit():
+            initial = "numeric"
+        path = directory + "/" + initial + ".txt"
+        file = open(path, "r")
+        file.seek(position)
+        file.readline()
+        file.readline()
+        line = file.readline()
+        while "#@" in line:
+            line = line.split('||')
+            doc_nlize = float(line[1])
+            docid = int(line[0])
+            if docid in doc_set:
+                doc_nlize_dict[k].append([docid, doc_nlize])
+            line = file.readline()
     
+    for docid in doc_set:
+        doc_nliz_list = []
+        sum = 0 
+        for term in q_terms.keys():
+            for x,y in doc_nlize_dict[term]: 
+                if x == docid: 
+                    doc_nliz_list.append(y)
+        i = 0 
+        while i!= len(nliz):
+            sum += nliz[i]* doc_nliz_list[i] 
+            i+=1
+        final_scores[docid] = sum
 
+    # sum = 0
+    # for docid in docset:
+    #   for term in dict:
+    #       for dic/nlize pair:
+        #       if value[0] == docid
+        #           doc_nlize_list.append([value[1]])
+    #   score = 0
+    #   for nlize in doc_nlize_list:
+    #       sum += nlize * term_nlize
 
-        
-
-
-    return nliz
-
-
-
-
-
-
-    
-    
-
-
-    
-
+    return final_scores
 
 
 def rank(doc_set,query,token_index):
@@ -139,7 +181,8 @@ if __name__ == "__main__":
     start_timer = time.time() #start timer
     query = query.split(" ")
     final_doc_ids = andquery(query)
-    rank_dict = rank(final_doc_ids,query, index_of_index)
+
+    rank_dict = query_tfidf(query,len(url_docid_dict),final_doc_ids,index_of_index)
     
     top_n = 5
     i = 0
