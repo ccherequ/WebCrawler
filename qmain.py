@@ -6,6 +6,7 @@ from nltk.stem import PorterStemmer
 import json
 from collections import Counter
 import math
+from query_set import return_positions
 directory = "indices"
 
 def stem(token):
@@ -69,6 +70,49 @@ def query_tfidf(query, numDocs, doc_set, token_index):
         word = stem(i)
         if word in token_index.keys():
             q_terms.append(word)
+
+    # Calculate the scaling factor for docs that contain 2-grams
+    two_gram_weight_scaling = {}
+    for docid in doc_set:
+        two_gram_weight_scaling[docid] = 1
+    if len(q_terms) > 1:
+        two_gram_list = []
+        counter = 0
+        while counter < len(q_terms) - 1:
+            two_gram = q_terms[counter] + q_terms[counter + 1]
+            two_gram_list.append(two_gram)
+            counter += 1
+        two_grams = Counter(two_gram_list)
+        two_gram_docs = {}
+        for i in two_grams.keys():
+            tg_set = return_docids(i, token_index)
+            two_gram_docs[i] = tg_set
+        for docid in doc_set:
+            for k,v in two_gram_docs.items():
+                if docid in v:
+                    two_gram_weight_scaling[docid] += 0.10  # Sets the weight to +10% for every 2-gram
+
+    # finish 2-gram scaling
+
+    # Relative distance of terms from each other in query
+
+    if len(q_terms) > 1:
+        query_term_distance = []
+        c1 = 0
+        while c1 < len(q_terms):
+            term = q_terms[c1]
+            temp_list = [term]
+            c2 = c1 + 1
+            while c2 < len(q_terms):
+                t2 = q_terms[c2]
+                dist = c2 - c1
+                temp_tup = (t2, dist)
+                temp_list.append(temp_tup)
+                c2 += 1
+            query_term_distance.append(temp_list)
+            c1 += 1
+    # finish relative distances
+
     q_terms = Counter(q_terms) #query frequency dict
     for k, v in q_terms.items():
         tf_wt.append([k, (1 + math.log(v, 10))])
@@ -86,14 +130,12 @@ def query_tfidf(query, numDocs, doc_set, token_index):
     for  i in wt_list:
         nliz.append(i/sum_root)
 
-
-    # for term in query:
-    #   get all postings for term
-    #   for term_posting:
-    #       if posting.docid in docset:
-    #           dict[term] = list.append([docid, nlize])
-
+    term_positions_list = []
+    for t in q_terms.keys():
+        l = [t]
+        term_positions_list.append(l)
     doc_nlize_dict = defaultdict(list)
+    count = 0
     for k, v in q_terms.items():
         position = token_index[k]
         initial = k[0]
@@ -110,9 +152,14 @@ def query_tfidf(query, numDocs, doc_set, token_index):
             doc_nlize = float(line[1])
             docid = int(line[0])
             if docid in doc_set:
+                positions_list = return_positions(k, docid, token_index)
                 doc_nlize_dict[k].append([docid, doc_nlize])
+                pos_tup = (docid, positions_list)
+                term_positions_list[count].append(pos_tup)
             line = file.readline()
-    
+        count += 1
+    print (term_positions_list)
+
     for docid in doc_set:
         doc_nliz_list = []
         sum = 0 
@@ -124,18 +171,7 @@ def query_tfidf(query, numDocs, doc_set, token_index):
         while i!= len(nliz):
             sum += nliz[i]* doc_nliz_list[i] 
             i+=1
-        final_scores[docid] = sum
-        print (final_scores)
-
-    # sum = 0
-    # for docid in docset:
-    #   for term in dict:
-    #       for dic/nlize pair:
-        #       if value[0] == docid
-        #           doc_nlize_list.append([value[1]])
-    #   score = 0
-    #   for nlize in doc_nlize_list:
-    #       sum += nlize * term_nlize
+        final_scores[docid] = sum * two_gram_weight_scaling[docid]
 
     return final_scores
 
