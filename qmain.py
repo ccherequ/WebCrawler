@@ -90,7 +90,7 @@ def query_tfidf(query, numDocs, doc_set, token_index):
         for docid in doc_set:
             for k,v in two_gram_docs.items():
                 if docid in v:
-                    two_gram_weight_scaling[docid] += 0.10  # Sets the weight to +10% for every 2-gram
+                    two_gram_weight_scaling[docid] += 0.05  # Sets the weight to +10% for every 2-gram
 
     # finish 2-gram scaling
 
@@ -160,6 +160,26 @@ def query_tfidf(query, numDocs, doc_set, token_index):
         count += 1
     print (term_positions_list)
 
+    # Check which docs preserve positioning
+
+    for docid in doc_set:
+        q_rel_dists = []
+        for relative_dist in query_term_distance:
+            term = relative_dist[0]
+            counter = 1
+            while counter < len(relative_dist):
+                q_rel_dists.append(relative_dist[counter])
+            if len(q_rel_dists) > 0:
+                doc_rel_dists = []
+                for doc_dist in term_positions_list:
+                    doc_term = doc_dist[0]
+                    counter = 1
+                    while counter < len(doc_dist):
+                        doc_rel_dists.append(doc_dist[counter])
+                    
+
+
+
     for docid in doc_set:
         doc_nliz_list = []
         sum = 0 
@@ -175,7 +195,7 @@ def query_tfidf(query, numDocs, doc_set, token_index):
 
     return final_scores
 
-
+"""
 def rank(doc_set,query,token_index):
     doc_freq = dict()
     for id in doc_set:
@@ -200,7 +220,7 @@ def rank(doc_set,query,token_index):
             line = file.readline()
     return doc_freq
 
-
+"""
 
 
 if __name__ == "__main__":
