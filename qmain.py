@@ -169,7 +169,28 @@ def query_tfidf(query, numDocs, doc_set, token_index):
                 #term_positions_list[count].append(pos_tup)
             line = file.readline()
         count += 1
-    print(doc_nlize_dict)
+
+    smallest_term = doc_nlize_dict.keys()[0]
+    small = len(doc_nlize_dict[smallest_term])
+    smallest_list = []
+    for i in doc_nlize_dict[smallest_term]:
+        smallest_list.append(doc_nlize_dict[smallest_term][i][0])
+    for k,v in doc_nlize_dict.items():
+        if len(v) < small:
+            small = len(v)
+            smallest_term = k
+            for i in doc_nlize_dict[smallest_term]:
+                smallest_list.append(doc_nlize_dict[smallest_term][i][0])
+
+    intersect = []
+
+    for k,v in doc_nlize_dict.items():
+        if k != smallest_term:
+            for pair in v:
+                if pair[0] in smallest_list and pair[0] not in intersect:
+                    intersect.append(pair[0])
+
+    print (intersect)
     """
     for docid in doc_set:
         for relative_dist in query_term_distance:
@@ -218,7 +239,7 @@ def query_tfidf(query, numDocs, doc_set, token_index):
                             doc_rel_dists.append(doc_dist[c])
                 """
     
-    for docid in doc_set:
+    for docid in intersect:
         doc_nliz_list = []
         sum = 0 
         
