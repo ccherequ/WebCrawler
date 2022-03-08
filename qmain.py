@@ -148,28 +148,30 @@ def query_tfidf(query, numDocs, doc_set, token_index):
         line = file.readline()
         while "#@" in line:
             line = line.split('||')
-            
             docid = int(line[0])
             if docid in doc_set:
                 doc_nlize = float(line[1])
                 #positions_list = return_positions(k, docid, token_index)
-                """if len(doc_nlize_dict[k]) >= 10:
-                    smallest = None
+                if len(doc_nlize_dict[k]) >= 100:
+                    smallest = doc_nlize_dict[k][0][1]
+                    counter = 1
+                    while counter < len(doc_nlize_dict[k]):
+                        if doc_nlize_dict[k][counter][1] > smallest:
+                            smallest = doc_nlize_dict[k][counter][1]
+                        counter += 1
                     for i in range(len(doc_nlize_dict[k])):
                         if doc_nlize_dict[k][i][1] > doc_nlize:
-                            if smallest == None or doc_nlize_dict[k][smallest][1] > doc_nlize_dict[k][i][1]:
-                                smallest = i
-                    if smallest != None:
-                        del doc_nlize_dict[k][smallest]
-                        doc_nlize_dict[k].append([docid, doc_nlize])
-                else:"""
-                if doc_nlize < -0.1:
+                            del doc_nlize_dict[k][i]
+                            doc_nlize_dict[k].append([docid, doc_nlize])
+                            break
+                else:
                     doc_nlize_dict[k].append([docid, doc_nlize])
                 #pos_tup = (docid, positions_list)
                 #term_positions_list[count].append(pos_tup)
             line = file.readline()
         count += 1
-
+    for k,v in doc_nlize_dict.items():
+        print(k, ' : ', v)
     smallest_term = list(doc_nlize_dict.keys())[0]
     small = len(doc_nlize_dict[smallest_term])
     smallest_list = []
@@ -189,12 +191,23 @@ def query_tfidf(query, numDocs, doc_set, token_index):
 
     intersect = []
 
-    for k,v in doc_nlize_dict.items():
-        if k != smallest_term:
-            for pair in v:
-                if pair[0] in smallest_list and pair[0] not in intersect:
-                    intersect.append(pair[0])
-
+    if len(q_terms.keys()) > 1:
+        for k,v in doc_nlize_dict.items():
+            if k != smallest_term:
+                for pair in v:
+                    if pair[0] in smallest_list and pair[0] not in intersect:
+                        intersect.append(pair[0])
+        for k,v in doc_nlize_dict.items():
+            c1 = 0
+            while c1 < len(doc_nlize_dict[k]):
+                if doc_nlize_dict[k][c1][0] not in intersect:
+                    del doc_nlize_dict[k][c1]
+                c1 += 1
+    else:
+        for k,v in doc_nlize_dict.items():
+            for post in v:
+                if post[0] not in intersect:
+                    intersect.append(post[0])
     print (intersect)
     """
     for docid in doc_set:
@@ -307,7 +320,7 @@ if __name__ == "__main__":
     rank_dict = query_tfidf(query,len(url_docid_dict),final_doc_ids,index_of_index)
     top_n = 5
     i = 0
-    for docid in sorted(rank_dict, key = rank_dict.get, reverse = True): 
+    for docid in sorted(rank_dict, key = rank_dict.get, reverse = False):
         if i < top_n:
             print(url_docid_dict[str(docid)])
             i += 1
