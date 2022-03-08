@@ -163,24 +163,29 @@ def query_tfidf(query, numDocs, doc_set, token_index):
                         del doc_nlize_dict[k][smallest]
                         doc_nlize_dict[k].append([docid, doc_nlize])
                 else:"""
-                if doc_nlize < -0.45:
+                if doc_nlize < -0.1:
                     doc_nlize_dict[k].append([docid, doc_nlize])
                 #pos_tup = (docid, positions_list)
                 #term_positions_list[count].append(pos_tup)
             line = file.readline()
         count += 1
 
-    smallest_term = doc_nlize_dict.keys()[0]
+    smallest_term = list(doc_nlize_dict.keys())[0]
     small = len(doc_nlize_dict[smallest_term])
     smallest_list = []
-    for i in doc_nlize_dict[smallest_term]:
-        smallest_list.append(doc_nlize_dict[smallest_term][i][0])
+    #for i in doc_nlize_dict[smallest_term]:
+    counter = 0
+    while counter < len(doc_nlize_dict[smallest_term]):
+        smallest_list.append(doc_nlize_dict[smallest_term][counter][0])
+        counter += 1
     for k,v in doc_nlize_dict.items():
         if len(v) < small:
             small = len(v)
             smallest_term = k
-            for i in doc_nlize_dict[smallest_term]:
-                smallest_list.append(doc_nlize_dict[smallest_term][i][0])
+            counter = 0
+            while counter < len(doc_nlize_dict[smallest_term]):
+                smallest_list.append(doc_nlize_dict[smallest_term][counter][0])
+                counter += 1
 
     intersect = []
 
