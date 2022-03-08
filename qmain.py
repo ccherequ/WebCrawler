@@ -116,8 +116,10 @@ def query_tfidf(query, numDocs, doc_set, token_index):
     for k, v in q_terms.items():
         tf_wt.append([k, (1 + math.log(v, 10))])
     wt_list = []
+    num_docs_containing_term = []
     for k,v in q_terms.items():  #build weight list
         setx = return_docids(k, token_index)
+        num_docs_containing_term.append((len(setx), k))
         wt = math.log(numDocs/len(setx)) * q_terms[k]
         wt_list.append(wt)
     for i in wt_list: #build nliz 
@@ -129,13 +131,22 @@ def query_tfidf(query, numDocs, doc_set, token_index):
     for  i in wt_list:
         nliz.append(i/sum_root)
 
+    num_docs_containing_term = sorted(num_docs_containing_term)
+    importance = []
+    for i in num_docs_containing_term:
+        importance.append(i[1])
+
     term_positions_list = []
     for t in q_terms.keys():
         l = [t]
         term_positions_list.append(l)
+
     doc_nlize_dict = defaultdict(list)
     count = 0
-    for k, v in q_terms.items():
+    new_doc_set = set()
+    importance_count = 0
+    while importance_count < len(importance):
+        k = importance[importance_count]
         position = token_index[k]
         initial = k[0]
         if initial.isdigit():
@@ -146,10 +157,10 @@ def query_tfidf(query, numDocs, doc_set, token_index):
         file.readline()
         file.readline()
         line = file.readline()
-        while "#@" in line:
-            line = line.split('||')
-            docid = int(line[0])
-            if docid in doc_set:
+        if importance_count == 0:
+            while "#@" in line:
+                line = line.split('||')
+                docid = int(line[0])
                 doc_nlize = float(line[1])
                 #positions_list = return_positions(k, docid, token_index)
                 if len(doc_nlize_dict[k]) >= 100:
@@ -162,14 +173,25 @@ def query_tfidf(query, numDocs, doc_set, token_index):
                     for i in range(len(doc_nlize_dict[k])):
                         if doc_nlize_dict[k][i][1] > doc_nlize:
                             del doc_nlize_dict[k][i]
+                            new_doc_set.remove(doc_nlize_dict[k][i][0])
+                            new_doc_set.add(docid)
                             doc_nlize_dict[k].append([docid, doc_nlize])
+                            line = file.readline()
                             break
                 else:
                     doc_nlize_dict[k].append([docid, doc_nlize])
+                    new_doc_set.add(docid)
+                    line = file.readline()
+        else:
+            while '#@' in line:
+                if docid in new_doc_set:
+                    doc_nlize_dict[k].append([docid, doc_nlize])
+                line = file.readline()
+        importance_count += 1
                 #pos_tup = (docid, positions_list)
                 #term_positions_list[count].append(pos_tup)
-            line = file.readline()
         count += 1
+    print(new_doc_set)
     for k,v in doc_nlize_dict.items():
         print(k, ' : ', v)
     smallest_term = list(doc_nlize_dict.keys())[0]
@@ -208,7 +230,6 @@ def query_tfidf(query, numDocs, doc_set, token_index):
             for post in v:
                 if post[0] not in intersect:
                     intersect.append(post[0])
-    print (intersect)
     """
     for docid in doc_set:
         for relative_dist in query_term_distance:
@@ -257,7 +278,7 @@ def query_tfidf(query, numDocs, doc_set, token_index):
                             doc_rel_dists.append(doc_dist[c])
                 """
     
-    for docid in intersect:
+    for docid in new_doc_set:
         doc_nliz_list = []
         sum = 0 
         
