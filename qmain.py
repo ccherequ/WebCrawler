@@ -134,9 +134,7 @@ def query_tfidf(query, numDocs, doc_set, token_index):
     num_docs_containing_term = sorted(num_docs_containing_term)
     importance = []
     for i in num_docs_containing_term:
-        if i[1] == 0:
-            return None
-        else:
+        if i[1] != 0:
             importance.append(i[1])
 
     term_positions_list = []
@@ -196,7 +194,6 @@ def query_tfidf(query, numDocs, doc_set, token_index):
                     doc_nlize_dict[k].append([docid, doc_nlize])
                     temp_set.add(docid)
                 line = file.readline()
-            print (temp_set)
             intersect = intersect.intersection(temp_set)
         importance_count += 1
                 #pos_tup = (docid, positions_list)
@@ -266,8 +263,10 @@ def query_tfidf(query, numDocs, doc_set, token_index):
         while i!= len(nliz):
             sum += nliz[i] * -(doc_nliz_list[i])
             i+=1
-        if docid in final_scores.keys():
+        try:
             final_scores[docid] = sum * two_gram_weight_scaling[docid]
+        except KeyError:
+            return None
         #print("For done in", time.time()-start_timer2, "seconds")
     
     return final_scores
@@ -308,14 +307,15 @@ if __name__ == "__main__":
 
     query = ""
     while query== "":
-        query = input("ENTER QUERY: ") 
+        query = input("ENTER QUERY: ")
+    query = str(query)
 
     start_timer = time.time() #start timer
     query = query.split(" ")
     final_doc_ids = andquery(query)
     rank_dict = query_tfidf(query,len(url_docid_dict),final_doc_ids,index_of_index)
-    if rank_dict is None:
-        print()
+    if rank_dict is None or len(rank_dict) == 0:
+        print('None Found')
     else:
         top_n = 5
         i = 0
