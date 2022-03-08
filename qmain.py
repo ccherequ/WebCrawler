@@ -171,7 +171,7 @@ def query_tfidf(query, numDocs, doc_set, token_index):
     # doc_dist = [term, (docid, [positions]), (docid2, [positions2])]
     # doc_term = term
     # doc_rel_dists = [(docid, [positions]), (docid2, [positions2])]
-
+    """
     for docid in doc_set:
         for relative_dist in query_term_distance:
             q_rel_dists = []
@@ -185,7 +185,6 @@ def query_tfidf(query, numDocs, doc_set, token_index):
                     doc_rel_dists = []
                     doc_term = doc_dist[0]
                     if doc_term != q_term:
-                        
 
                 # ['car', , ('auto', 1), ('insur', 2), ('car', 3)]
                 # query_term_positions = (docid, [pos])
@@ -211,8 +210,6 @@ def query_tfidf(query, numDocs, doc_set, token_index):
                 #                   true
                 #           c2 += 1
                 #       c1 += 1
-
-                """
                 for doc_dist in term_positions_list:
                     doc_rel_dists = []
                     doc_term = doc_dist[0]
@@ -221,11 +218,6 @@ def query_tfidf(query, numDocs, doc_set, token_index):
                         while counter < len(doc_dist):
                             doc_rel_dists.append(doc_dist[c])
                 """
-
-
-
-
-
     for docid in doc_set:
         doc_nliz_list = []
         sum = 0 
@@ -238,7 +230,6 @@ def query_tfidf(query, numDocs, doc_set, token_index):
             sum += nliz[i]* doc_nliz_list[i] 
             i+=1
         final_scores[docid] = sum * two_gram_weight_scaling[docid]
-
     return final_scores
 
 """
