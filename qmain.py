@@ -145,7 +145,7 @@ def query_tfidf(query, numDocs, doc_set, token_index):
     count = 0
     new_doc_set = set()
     importance_count = 0
-    while importance_count < len(importance):
+    while importance_count < len(importance) and importance_count < 3:
         k = importance[importance_count]
         position = token_index[k]
         initial = k[0]
@@ -158,6 +158,7 @@ def query_tfidf(query, numDocs, doc_set, token_index):
         file.readline()
         line = file.readline()
         if importance_count == 0:
+            intersect = set()
             while "#@" in line:
                 line = line.split('||')
                 docid = int(line[0])
@@ -172,25 +173,23 @@ def query_tfidf(query, numDocs, doc_set, token_index):
                         counter += 1
                     for i in range(len(doc_nlize_dict[k])):
                         if doc_nlize_dict[k][i][1] > doc_nlize:
-                            new_doc_set.remove(doc_nlize_dict[k][i][0])
+                            intersect.remove(doc_nlize_dict[k][i][0])
                             del doc_nlize_dict[k][i]
-                            new_doc_set.add(docid)
+                            intersect.add(docid)
                             doc_nlize_dict[k].append([docid, doc_nlize])
                             line = file.readline()
                             break
                 else:
                     doc_nlize_dict[k].append([docid, doc_nlize])
-                    new_doc_set.add(docid)
+                    intersect.add(docid)
                     line = file.readline()
         else:
-            if importance_count == 1:
-                intersect = new_doc_set
             temp_set = set()
             while '#@' in line:
                 line = line.split('||')
                 docid = int(line[0])
                 doc_nlize = float(line[1])
-                if docid in new_doc_set:
+                if docid in intersect:
                     doc_nlize_dict[k].append([docid, doc_nlize])
                     temp_set.add(docid)
                 line = file.readline()
@@ -199,9 +198,6 @@ def query_tfidf(query, numDocs, doc_set, token_index):
                 #pos_tup = (docid, positions_list)
                 #term_positions_list[count].append(pos_tup)
         count += 1
-    print(new_doc_set)
-
-
 
     print (intersect)
     """
