@@ -1,7 +1,7 @@
 
 import time
 from collections import defaultdict
-from typing import final
+#from typing import final
 from nltk.stem import PorterStemmer
 import json
 from collections import Counter
@@ -91,11 +91,10 @@ def query_tfidf(query, numDocs, doc_set, token_index):
             for k,v in two_gram_docs.items():
                 if docid in v:
                     two_gram_weight_scaling[docid] += 0.05  # Sets the weight to +10% for every 2-gram
-
     # finish 2-gram scaling
 
     # Relative distance of terms from each other in query
-
+    
     if len(q_terms) > 1:
         query_term_distance = []
         c1 = 0
@@ -149,15 +148,28 @@ def query_tfidf(query, numDocs, doc_set, token_index):
         line = file.readline()
         while "#@" in line:
             line = line.split('||')
-            doc_nlize = float(line[1])
+            
             docid = int(line[0])
             if docid in doc_set:
-                positions_list = return_positions(k, docid, token_index)
-                doc_nlize_dict[k].append([docid, doc_nlize])
-                pos_tup = (docid, positions_list)
-                term_positions_list[count].append(pos_tup)
+                doc_nlize = float(line[1])
+                #positions_list = return_positions(k, docid, token_index)
+                """if len(doc_nlize_dict[k]) >= 10:
+                    smallest = None
+                    for i in range(len(doc_nlize_dict[k])):
+                        if doc_nlize_dict[k][i][1] > doc_nlize:
+                            if smallest == None or doc_nlize_dict[k][smallest][1] > doc_nlize_dict[k][i][1]:
+                                smallest = i
+                    if smallest != None:
+                        del doc_nlize_dict[k][smallest]
+                        doc_nlize_dict[k].append([docid, doc_nlize])
+                else:"""
+                if doc_nlize < -0.45:
+                    doc_nlize_dict[k].append([docid, doc_nlize])
+                #pos_tup = (docid, positions_list)
+                #term_positions_list[count].append(pos_tup)
             line = file.readline()
         count += 1
+    print(doc_nlize_dict)
     """
     for docid in doc_set:
         for relative_dist in query_term_distance:
@@ -205,18 +217,24 @@ def query_tfidf(query, numDocs, doc_set, token_index):
                         while counter < len(doc_dist):
                             doc_rel_dists.append(doc_dist[c])
                 """
+    
     for docid in doc_set:
         doc_nliz_list = []
         sum = 0 
+        
         for term in q_terms.keys():
             for x,y in doc_nlize_dict[term]: 
                 if x == docid: 
                     doc_nliz_list.append(y)
+        
         i = 0 
+        #start_timer2 = time.time() #start timer
         while i!= len(nliz):
-            sum += nliz[i]* doc_nliz_list[i] 
+            sum += nliz[i]* -(doc_nliz_list[i]) 
             i+=1
         final_scores[docid] = sum * two_gram_weight_scaling[docid]
+        #print("For done in", time.time()-start_timer2, "seconds")
+    
     return final_scores
 
 """
@@ -260,9 +278,7 @@ if __name__ == "__main__":
     start_timer = time.time() #start timer
     query = query.split(" ")
     final_doc_ids = andquery(query)
-
     rank_dict = query_tfidf(query,len(url_docid_dict),final_doc_ids,index_of_index)
-    
     top_n = 5
     i = 0
     for docid in sorted(rank_dict, key = rank_dict.get, reverse = True): 
