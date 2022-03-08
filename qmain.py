@@ -172,8 +172,8 @@ def query_tfidf(query, numDocs, doc_set, token_index):
                         counter += 1
                     for i in range(len(doc_nlize_dict[k])):
                         if doc_nlize_dict[k][i][1] > doc_nlize:
-                            del doc_nlize_dict[k][i]
                             new_doc_set.remove(doc_nlize_dict[k][i][0])
+                            del doc_nlize_dict[k][i]
                             new_doc_set.add(docid)
                             doc_nlize_dict[k].append([docid, doc_nlize])
                             line = file.readline()
@@ -183,53 +183,27 @@ def query_tfidf(query, numDocs, doc_set, token_index):
                     new_doc_set.add(docid)
                     line = file.readline()
         else:
+            if importance_count == 1:
+                intersect = new_doc_set
+            temp_set = set()
             while '#@' in line:
+                line = line.split('||')
+                docid = int(line[0])
+                doc_nlize = float(line[1])
                 if docid in new_doc_set:
                     doc_nlize_dict[k].append([docid, doc_nlize])
+                    temp_set.add(docid)
                 line = file.readline()
+            intersect = intersect.intersection(temp_set)
         importance_count += 1
                 #pos_tup = (docid, positions_list)
                 #term_positions_list[count].append(pos_tup)
         count += 1
     print(new_doc_set)
-    for k,v in doc_nlize_dict.items():
-        print(k, ' : ', v)
-    smallest_term = list(doc_nlize_dict.keys())[0]
-    small = len(doc_nlize_dict[smallest_term])
-    smallest_list = []
-    #for i in doc_nlize_dict[smallest_term]:
-    counter = 0
-    while counter < len(doc_nlize_dict[smallest_term]):
-        smallest_list.append(doc_nlize_dict[smallest_term][counter][0])
-        counter += 1
-    for k,v in doc_nlize_dict.items():
-        if len(v) < small:
-            small = len(v)
-            smallest_term = k
-            counter = 0
-            while counter < len(doc_nlize_dict[smallest_term]):
-                smallest_list.append(doc_nlize_dict[smallest_term][counter][0])
-                counter += 1
 
-    intersect = []
 
-    if len(q_terms.keys()) > 1:
-        for k,v in doc_nlize_dict.items():
-            if k != smallest_term:
-                for pair in v:
-                    if pair[0] in smallest_list and pair[0] not in intersect:
-                        intersect.append(pair[0])
-        for k,v in doc_nlize_dict.items():
-            c1 = 0
-            while c1 < len(doc_nlize_dict[k]):
-                if doc_nlize_dict[k][c1][0] not in intersect:
-                    del doc_nlize_dict[k][c1]
-                c1 += 1
-    else:
-        for k,v in doc_nlize_dict.items():
-            for post in v:
-                if post[0] not in intersect:
-                    intersect.append(post[0])
+
+    print (intersect)
     """
     for docid in doc_set:
         for relative_dist in query_term_distance:
@@ -278,7 +252,7 @@ def query_tfidf(query, numDocs, doc_set, token_index):
                             doc_rel_dists.append(doc_dist[c])
                 """
     
-    for docid in new_doc_set:
+    for docid in intersect:
         doc_nliz_list = []
         sum = 0 
         
@@ -290,7 +264,7 @@ def query_tfidf(query, numDocs, doc_set, token_index):
         i = 0 
         #start_timer2 = time.time() #start timer
         while i!= len(nliz):
-            sum += nliz[i]* -(doc_nliz_list[i]) 
+            sum += nliz[i] * -(doc_nliz_list[i])
             i+=1
         final_scores[docid] = sum * two_gram_weight_scaling[docid]
         #print("For done in", time.time()-start_timer2, "seconds")
@@ -341,7 +315,7 @@ if __name__ == "__main__":
     rank_dict = query_tfidf(query,len(url_docid_dict),final_doc_ids,index_of_index)
     top_n = 5
     i = 0
-    for docid in sorted(rank_dict, key = rank_dict.get, reverse = False):
+    for docid in sorted(rank_dict, key = rank_dict.get, reverse = True):
         if i < top_n:
             print(url_docid_dict[str(docid)])
             i += 1
