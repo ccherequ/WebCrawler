@@ -158,19 +158,6 @@ def query_tfidf(query, numDocs, doc_set, token_index):
                 term_positions_list[count].append(pos_tup)
             line = file.readline()
         count += 1
-    print (term_positions_list)
-
-    # Check which docs preserve positioning
-
-    # query_term_dist = [[term, (term2, dist), (term3, dist)], [term2, (term3, dist)], [term3]]
-    # relative_dist = [term, (term2, dist), (term3, dist)]
-    # term = term
-    # q_rel_dist = [(term2, dist), (term3, dist)]
-
-    # term_positions_list = [[term, (docid, [positions]), (docid2, []positions2)], [term2, (docid, [positions]), (docid2, []positions2)]]
-    # doc_dist = [term, (docid, [positions]), (docid2, [positions2])]
-    # doc_term = term
-    # doc_rel_dists = [(docid, [positions]), (docid2, [positions2])]
     """
     for docid in doc_set:
         for relative_dist in query_term_distance:
