@@ -199,53 +199,7 @@ def query_tfidf(query, numDocs, doc_set, token_index):
                 #pos_tup = (docid, positions_list)
                 #term_positions_list[count].append(pos_tup)
         count += 1
-    """
-    for docid in doc_set:
-        for relative_dist in query_term_distance:
-            q_rel_dists = []
-            q_term = relative_dist[0]
-            counter = 1
-            while counter < len(relative_dist):
-                q_rel_dists.append(relative_dist[counter])
-                counter += 1
-            if len(q_rel_dists) > 0:
-                for doc_dist in term_positions_list:
-                    doc_rel_dists = []
-                    doc_term = doc_dist[0]
-                    if doc_term != q_term:
-
-                # ['car', , ('auto', 1), ('insur', 2), ('car', 3)]
-                # query_term_positions = (docid, [pos])
-                # t1
-                # term_positions = query_term_positions[1]
-
-                # for every other entry
-                #   t2
-                #   other_qterm_positions = (docid, [pos])
-                #   other_positions = other_qterm_positions[1]
-
-                #   [15,33]    [20]
-
-                #   c1 = 0
-                #   while c1 < len(term_positions)
-                #       c2 = 0
-                #       while c2 < len(other_positions)
-                #           if term_positions[c1] < other_positions[c2]
-                #               for tup in query_term_distance
-                #                   if tup[0] == t2:
-                #                       dist = tup[1]
-                #               if other_position[c2] - term_position[c1] == dist:
-                #                   true
-                #           c2 += 1
-                #       c1 += 1
-                for doc_dist in term_positions_list:
-                    doc_rel_dists = []
-                    doc_term = doc_dist[0]
-                    if doc_term == q_term:
-                        c = 1
-                        while counter < len(doc_dist):
-                            doc_rel_dists.append(doc_dist[c])
-                """
+   
     if len(intersect) == 0:
         return None
 
@@ -270,33 +224,6 @@ def query_tfidf(query, numDocs, doc_set, token_index):
         #print("For done in", time.time()-start_timer2, "seconds")
     
     return final_scores
-
-"""
-def rank(doc_set,query,token_index):
-    doc_freq = dict()
-    for id in doc_set:
-        doc_freq[id] = 0
-    for word in query: 
-        position = token_index[stem(word)]
-        initial = word[0]
-        if initial.isdigit():
-            initial = "numeric"
-        path = directory + "/" + initial + ".txt"
-        file = open(path, "r")
-        file.seek(position)
-        file.readline()
-        file.readline() 
-        line = file.readline()
-        while "#@" in line:
-            line = line.split(',')
-            frequency = int(line[1])
-            docid = int(line[0])
-            if docid in doc_set:
-                doc_freq[docid] += frequency
-            line = file.readline()
-    return doc_freq
-
-"""
 
 
 if __name__ == "__main__":
