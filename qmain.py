@@ -214,7 +214,7 @@ def query_tfidf(query, numDocs, doc_set, token_index):
 
         i = 0 
         #start_timer2 = time.time() #start timer
-        while i!= len(nliz):
+        while i!= len(doc_nliz_list):
             sum += nliz[i] * -(doc_nliz_list[i])
             i+=1
         try:
@@ -246,7 +246,7 @@ if __name__ == "__main__":
     else:
         top_n = 5
         i = 0
-        for docid in sorted(rank_dict, key = rank_dict.get, reverse = True):
+        for docid in sorted(rank_dict, key = rank_dict.get, reverse = False):
             if i < top_n:
                 print(url_docid_dict[str(docid)])
                 i += 1
