@@ -206,17 +206,16 @@ def query_tfidf(query, numDocs, doc_set, token_index):
     for docid in intersect:
         doc_nliz_list = []
         sum = 0 
-        
+
+        c = 0
         for term in q_terms.keys():
             for x,y in doc_nlize_dict[term]:
-                if x == docid: 
-                    doc_nliz_list.append(y)
+                if x == docid:
+                    doc_nliz_list.append([c, y])
+            c += 1
 
-        i = 0 
-        #start_timer2 = time.time() #start timer
-        while i!= len(doc_nliz_list):
-            sum += nliz[i] * -(doc_nliz_list[i])
-            i+=1
+        for t in doc_nliz_list:
+            sum += nliz[t[0]] * abs(t[1])
         try:
             final_scores[docid] = sum * two_gram_weight_scaling[docid]
         except KeyError:
@@ -246,7 +245,7 @@ if __name__ == "__main__":
     else:
         top_n = 5
         i = 0
-        for docid in sorted(rank_dict, key = rank_dict.get, reverse = False):
+        for docid in sorted(rank_dict, key = rank_dict.get, reverse = True):
             if i < top_n:
                 print(url_docid_dict[str(docid)])
                 i += 1
